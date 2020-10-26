@@ -31,12 +31,11 @@ class SyncDataCommand extends Command
         $lastModifiedAt = Carbon::createFromFormat(Carbon::RFC7231, trim($matches[1] ?? ""));
         $lastUpdatedAt = Cache::get("previous_file_date");
 
-        if (!$this->option("force") && $lastUpdatedAt && !$lastModifiedAt->isBefore($lastModifiedAt)) {
+        if (!$this->option("force") && !is_null($lastUpdatedAt) && !$lastModifiedAt->isBefore($lastModifiedAt)) {
             $this->info("Data is up to date.");
             return 0;
         }
 
-        Cache::forever("previous_file_date", $lastModifiedAt);
 
         $ch = curl_init($this->url);
         curl_setopt($ch, CURLOPT_HEADER, false);
@@ -63,8 +62,10 @@ class SyncDataCommand extends Command
             DB::table("cases")->insert($bulk);
         }
 
-        $this->info("All new cases : " . DB::table("cases")->sum("new_cases"));
-        $this->info("France new cases : " . DB::table("cases")->where("country", "France")->sum("new_cases"));
+	    Cache::forever("previous_file_date", $lastModifiedAt);
+
+        $this->info("All new cases : " . number_format(DB::table("cases")->sum("new_cases"), 0, ',', ' '));
+        $this->info("France new cases : " . number_format(DB::table("cases")->where("country", "France")->sum("new_cases"), 0, ',', ' '));
 
         return 0;
     }
