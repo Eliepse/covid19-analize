@@ -4,6 +4,12 @@
 /storage/*.key
 /vendor
 /.idea
+public/*
+!public/.htaccess
+!public/favicon.ico
+!public/index.php
+!public/robots.txt
+!public/web.config
 .env
 .env.backup
 .phpunit.result.cache

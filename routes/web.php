@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', StatsController::class);
+Route::get('/country/{country?}', StatsController::class);

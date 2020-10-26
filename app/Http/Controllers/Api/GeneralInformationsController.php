@@ -24,8 +24,8 @@ class GeneralInformationsController
             ->get()
             ->each(fn($val) => $val->new_cases = intval($val->new_cases));
 
-        $smooth = $this->getAverage($new_cases, 3);
-        $smoother = $this->getAverage($smooth, 3);
+        $smooth = $this->getAverage($new_cases, 5);
+        $smoother = $this->getAverage($smooth, 5);
 
         return [
             "total" => [
