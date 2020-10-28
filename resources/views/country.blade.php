@@ -256,6 +256,7 @@
 <body class="antialiased">
 <div id="app">
 	<general country="{{ $country }}"></general>
+	<progression country="{{ $country }}"></progression>
 </div>
 <script src="{{ mix("js/app.js") }}"></script>
 </body>

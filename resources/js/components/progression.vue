@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "general",
+  name: "progression",
   props: {
     country: {
       type: String,
@@ -54,7 +54,7 @@ export default {
         ]
       },
     });
-    Axios.get("/api/general/" + this.country)
+    Axios.get("/api/progression/" + this.country)
         .then((resp) => {
           chart.data.labels = Object.keys(resp.data.data.raw);
           chart.data.datasets[2].data = Object.values(resp.data.data.raw);

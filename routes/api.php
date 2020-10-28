@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\GeneralInformationsController;
+use App\Http\Controllers\Api\ProgessionInformationsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/general/{country?}', GeneralInformationsController::class);
+Route::get('/progression/{country?}', ProgessionInformationsController::class);
