@@ -16,6 +16,7 @@ class SyncDataCommand extends Command
 
     public function handle(): int
     {
+	    $this->info("Checking if data has been updated...");
         $ch = curl_init($this->url);
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_NOBODY, true);
@@ -31,12 +32,12 @@ class SyncDataCommand extends Command
         $lastModifiedAt = Carbon::createFromFormat(Carbon::RFC7231, trim($matches[1] ?? ""));
         $lastUpdatedAt = Cache::get("previous_file_date");
 
-        if (!$this->option("force") && !is_null($lastUpdatedAt) && !$lastModifiedAt->isBefore($lastModifiedAt)) {
+        if (!$this->option("force") && !is_null($lastUpdatedAt) && !$lastModifiedAt->isAfter($lastUpdatedAt)) {
             $this->info("Data is up to date.");
             return 0;
         }
 
-
+	    $this->info("Dowloading data...");
         $ch = curl_init($this->url);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_NOBODY, false);
@@ -46,6 +47,7 @@ class SyncDataCommand extends Command
 
         array_shift($lines);
 
+	    $this->info("Saving data...");
         DB::table("cases")->truncate();
 
         foreach (array_chunk($lines, 300) as $chunk) {
@@ -63,6 +65,8 @@ class SyncDataCommand extends Command
         }
 
 	    Cache::forever("previous_file_date", $lastModifiedAt);
+
+	    $this->info("Synchronization complete!");
 
         $this->info("All new cases : " . number_format(DB::table("cases")->sum("new_cases"), 0, ',', ' '));
         $this->info("France new cases : " . number_format(DB::table("cases")->where("country", "France")->sum("new_cases"), 0, ',', ' '));
