@@ -15,12 +15,17 @@ export default {
     return {}
   },
   mounted() {
+    Chart.defaults.bar.barPercentage = 1.0
+    Chart.defaults.bar.categoryPercentage = 1.0
     const chart = new Chart(this.$refs.canvas, {
       type: 'bar',
       options: {
         animation: {
           duration: 0
-        }
+        },
+        tooltips: {
+            mode: 'x'
+        },
       },
       data: {
         datasets: [
@@ -33,6 +38,7 @@ export default {
             type: 'line',
             order: 1,
             pointRadius: 0,
+            pointHitRadius: 3,
           },
           {
             label: 'average 1',
@@ -43,12 +49,15 @@ export default {
             type: 'line',
             order: 2,
             pointRadius: 0,
+            pointHitRadius: 3,
           },
           {
             label: 'New cases',
             data: [],
             backgroundColor: '#d0d0d0',
-            barPercentage: 1,
+            barThickness: 'flex',
+            barPercentage: 1.0,
+            categoryPercentage: 1.0,
             order: 3,
           },
         ]
