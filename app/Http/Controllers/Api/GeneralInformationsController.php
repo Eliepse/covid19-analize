@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api;
 
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,7 @@ class GeneralInformationsController
 
         $new_cases = $query->clone()->groupBy("reported_at")
             ->selectRaw("SUM(new_cases) AS new_cases, reported_at")
+            ->whereDate("reported_at", ">=", Carbon::today()->subMonths(6))
             ->get()
             ->each(fn($val) => $val->new_cases = intval($val->new_cases));
 
